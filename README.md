@@ -57,7 +57,7 @@ By completing this lab, you will be able to:
 
 ---
 
-## Task 1: Pipeline Architecture Diagram (~25 minutes)
+## Task 1: Pipeline Architecture Diagram
 
 ### 1.1 — Draw the end-to-end architecture
 
@@ -105,7 +105,7 @@ An architecture diagram and component descriptions covering the full pipeline fr
 
 ---
 
-## Task 2: Validation and Error Handling Design (~20 minutes)
+## Task 2: Validation and Error Handling Design
 
 ### 2.1 — Define validation rules
 
@@ -137,7 +137,7 @@ A complete validation rule set (at least 8-10 rules) and an error handling flow 
 
 ---
 
-## Task 3: Transformation and Storage Design (~20 minutes)
+## Task 3: Transformation and Storage Design
 
 ### 3.1 — Define transformations
 
@@ -180,73 +180,6 @@ Transformation list, storage layer table with justifications, and an incremental
 
 ---
 
-## Task 4: Monitoring and Data Quality (~20 minutes)
-
-### 4.1 — Define quality metrics
-
-For each stage of your pipeline, define at least two quality metrics that should be monitored. Format:
-
-| Stage | Metric | Expected range | Alert condition |
-|---|---|---|---|
-| Ingestion | Records per hour | 50-500 | < 10 for 2 consecutive hours |
-| Validation | Rejection rate | < 5% | > 10% in a single batch |
-| ... | ... | ... | ... |
-
-### 4.2 — Design freshness monitoring
-
-Your BI dashboard expects data updated by 7 AM daily. Your ML model expects features refreshed by 9 AM weekly.
-
-- How do you verify that these deadlines are met?
-- What happens if the pipeline is late? Who gets alerted and what is the escalation path?
-- How do you distinguish between "the pipeline is slow" and "the pipeline is broken"?
-
-### 4.3 — Design schema drift detection
-
-Source systems change without warning. A new column appears, a field changes from integer to string, or a column is silently renamed.
-
-- How does your pipeline detect schema changes?
-- What happens when a schema change is detected? Does the pipeline stop, adapt, or alert?
-- How do you handle backward-compatible changes (new column) differently from breaking changes (renamed column)?
-
-### Deliverable for Task 4
-
-A quality metrics table (at least 8 metrics across all stages), a freshness monitoring plan, and a schema drift strategy.
-
----
-
-## Task 5: Failure Modes and Lineage (~20 minutes)
-
-### 5.1 — Failure mode analysis
-
-Identify at least five realistic failure scenarios for your pipeline. For each one:
-
-| Failure | Detection | Impact | Recovery |
-|---|---|---|---|
-| Source file is corrupted mid-transfer | Checksum mismatch | Batch fails | Re-request file, retry ingestion |
-| ... | ... | ... | ... |
-
-Think about failures at every stage: ingestion, validation, transformation, storage, and monitoring itself.
-
-### 5.2 — Data lineage design
-
-Describe how you would trace a single record from its origin (a transaction in the source system) through every stage of the pipeline to its final consumer (a row in the BI dashboard or a feature in the ML model).
-
-Your lineage design should answer:
-- For any output record, can you identify which source records contributed to it?
-- For any source record, can you identify which outputs were derived from it?
-- If a transformation is found to be buggy, can you identify all affected outputs?
-- What metadata do you store at each stage? (timestamps, version IDs, source references)
-
-### 5.3 — Operational checklist
-
-Create a checklist that an operator would use to verify the pipeline is healthy after a routine run. Include at least 8 items.
-
-### Deliverable for Task 5
-
-A failure mode table (at least 5 scenarios), a lineage design with forward and backward tracing, and an operational health checklist.
-
----
-
 ## Submission
 
 ### What to submit
@@ -255,7 +188,7 @@ Submit the following file:
 
 - `pipeline-design.md` (or `pipeline-design.pdf`)
 
-This file should contain all five tasks: architecture diagram, validation design, transformation and storage design, monitoring plan, and failure/lineage analysis.
+This file should contain all three tasks: architecture diagram, validation design, and transformation and storage design.
 
 ### Definition of done (checklist)
 
@@ -267,9 +200,6 @@ Before you submit, make sure:
 - [ ] Error handling flow covers rejection, quarantine, alerting, and recovery
 - [ ] Transformations are listed with inputs, outputs, and idempotency considerations
 - [ ] Storage layers are defined with format choices and justifications
-- [ ] Quality metrics cover all pipeline stages (at least 8 metrics total)
-- [ ] At least 5 failure scenarios are analyzed with detection, impact, and recovery
-- [ ] Data lineage supports both forward and backward tracing
 - [ ] The design accounts for both batch (historical) and incremental (row-by-row) data
 
 ### How to submit (Git workflow)
@@ -287,4 +217,4 @@ git push -u origin HEAD
 
 ## Evaluation Criteria
 
-Your work will be evaluated on **completeness**, **coherence**, and **depth of reasoning**. **Completeness** means all five tasks are addressed with sufficient detail. **Coherence** means the components fit together — your validation rules match the data you described, your storage formats match your query patterns, and your monitoring catches the failures you identified. **Depth** means you explain *why* you made each design choice, not just *what* you chose.
+Your work will be evaluated on **completeness**, **coherence**, and **depth of reasoning**. **Completeness** means all three tasks are addressed with sufficient detail. **Coherence** means the components fit together — your validation rules match the data you described, your storage formats match your query patterns, and your design accounts for both batch and incremental data flows. **Depth** means you explain *why* you made each design choice, not just *what* you chose.
