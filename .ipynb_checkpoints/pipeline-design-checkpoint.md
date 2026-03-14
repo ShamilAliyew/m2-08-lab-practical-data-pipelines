@@ -1,41 +1,64 @@
 # Task 1: Pipeline Architecture Diagram
 ## 1.1 — Draw the end-to-end architecture   
 
-
-Historical Batch Source (Online Retail.xlsx)
-               │
-               ▼
-           Batch Ingestion
-               │
-Live Transaction Stream (row-by-row events)
-               │
-               ▼
-          Stream Ingestion (Message Bus)
-               │
-               ▼
-            Raw Layer (Landing Zone, Parquet)
-               │
-               ▼
-          Validation (Schema + Rules)
-               │
-       ┌───────┴────────┐
-       ▼                ▼
-   Clean Layer       Quarantine / Dead Letter
-  (Valid Records)     (Invalid Records)
-       │
-       ▼
-Transformation (Cleaning, Derived Columns, Aggregation, Feature Engineering)
-       │
-       ▼
-Feature Layer (ML Features)
-       │
-   ┌───┴──────┐
-   ▼          ▼
-BI Dashboard  ML Model
-(Daily Reports) (Customer Value Prediction)
-
-Monitoring & Alerting (Freshness, Volume, Quality)
-
+                         ┌──────────────────────────┐
+                         │  Historical Batch Source │
+                         │  Online Retail.xlsx      │
+                         └─────────────┬────────────┘
+                                       │
+                                       ▼
+                               Batch Ingestion
+                                       │
+                                       │
+                                       │
+┌──────────────────────────┐           ▼
+│  Live Transaction Stream │    ┌───────────────┐
+│  (Row-by-row events)     │───▶│ Stream        │
+└─────────────┬────────────┘    │ Ingestion     │
+              │                 │ (Message Bus) │
+              │                 └───────┬───────┘
+              │                         │
+              └──────────────┬──────────┘
+                             ▼
+                     ┌─────────────────┐
+                     │   Raw Layer     │
+                     │   Landing Zone  │
+                     │  (Parquet)      │
+                     └────────┬────────┘
+                              ▼
+                     ┌─────────────────┐
+                     │  Validation     │
+                     │ Schema + Rules  │
+                     └───────┬─────────┘
+                             │
+                 ┌───────────┴───────────┐
+                 ▼                       ▼
+        ┌─────────────────┐     ┌──────────────────┐
+        │ Clean Layer     │     │ Quarantine /     │
+        │ Valid Records   │     │ Dead Letter Area │
+        └────────┬────────┘     └──────────────────┘
+                 ▼
+         ┌────────────────────┐
+         │ Transformation     │
+         │ Feature Engineering│
+         └────────┬───────────┘
+                  ▼
+           ┌───────────────┐
+           │ Feature Layer │
+           │ ML Features   │
+           └───────┬───────┘
+                   │
+        ┌──────────┴──────────┐
+        ▼                     ▼
+┌───────────────┐      ┌────────────────┐
+│ BI Dashboard  │      │ ML Model       │
+│ Daily Reports │      │ Customer Value │
+└───────────────┘      └────────────────┘
+        
+            ┌─────────────────────────────┐
+            │ Monitoring & Alerting       │
+            │ Freshness, Volume, Quality  │
+            └─────────────────────────────┘
 
 
 This pipeline illustrates the stages that data passes through in a real production environment and demonstrates its architecture. The purpose is to process both historical batch data and real-time transaction events, validate and clean them, and prepare them for analytics and machine learning. The pipeline ensures reliable and high-quality data for both BI dashboards and ML models.
