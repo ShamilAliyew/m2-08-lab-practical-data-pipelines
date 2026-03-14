@@ -1,5 +1,6 @@
 # Task 1: Pipeline Architecture Diagram
-## 1.1 — Draw the end-to-end architecture                  
+## 1.1 — Draw the end-to-end architecture   
+
                          
                          ┌──────────────────────────┐
                          │  Historical Batch Source │
