@@ -43,20 +43,21 @@
          │ Feature Engineering│
          └────────┬───────────┘
                   ▼
-           ┌───────────────┐
-           │ Feature Layer │
-           │ ML Features   │
-           └───────┬───────┘
-                   │
-        ┌──────────┴──────────┐
-        ▼                     ▼
+            ┌───────────────┐
+            │ Feature Layer │
+            │ ML Features   │
+            └───────┬───────┘
+                    │
+        ┌───────────┴──────────┐
+        ▼                      ▼
 ┌───────────────┐      ┌────────────────┐
 │ BI Dashboard  │      │ ML Model       │
 │ Daily Reports │      │ Customer Value │
 └───────────────┘      └────────────────┘
-        
+
+
             ┌─────────────────────────────┐
-            │ Monitoring & Alerting       │
+            │ Monitoring &amp; Alerting       │
             │ Freshness, Volume, Quality  │
             └─────────────────────────────┘
 
