@@ -1,6 +1,6 @@
 # Task 1: Pipeline Architecture Diagram
 ## 1.1 — Draw the end-to-end architecture   
-
+```
                          ┌──────────────────────────┐
                          │  Historical Batch Source │
                          │  Online Retail.xlsx      │
@@ -54,13 +54,13 @@
 │ BI Dashboard  │      │ ML Model       │
 │ Daily Reports │      │ Customer Value │
 └───────────────┘      └────────────────┘
-
-
+             │                 │
+             ▼                 ▼
             ┌─────────────────────────────┐
-            │ Monitoring &amp; Alerting       │
+            │ Monitoring &amp; Alerting   │
             │ Freshness, Volume, Quality  │
             └─────────────────────────────┘
-
+```
 
 This pipeline illustrates the stages that data passes through in a real production environment and demonstrates its architecture. The purpose is to process both historical batch data and real-time transaction events, validate and clean them, and prepare them for analytics and machine learning. The pipeline ensures reliable and high-quality data for both BI dashboards and ML models.
 
@@ -293,3 +293,4 @@ Late-arriving records are managed using two complementary strategies. First, a *
 
 **Customer-Level Feature Refresh**  
 Customer-level features are refreshed daily during the batch processing cycle. This ensures that historical features are up-to-date for ML model training while balancing computational efficiency. Real-time features from streaming data are also updated as transactions arrive, allowing the system to maintain near-real-time insights where required.
+
