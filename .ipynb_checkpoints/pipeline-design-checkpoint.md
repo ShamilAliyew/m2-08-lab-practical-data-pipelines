@@ -258,3 +258,38 @@ After all transformations, the data is stored in layered storage:
 This design ensures that any stage can be re-run safely without corrupting downstream consumers or producing inconsistent results.
 
 
+## 3.2 — Design the storage layers
+
+### Storage Layers
+
+| Layer    | Contents                                                                 | Format                  | Update Frequency                                           | Retention |
+|----------|--------------------------------------------------------------------------|------------------------|-----------------------------------------------------------|-----------|
+| Raw      | Original, unmodified data directly from the source.                      | Parquet                | Append-only; new transactions added row-by-row as they arrive | Long      |
+| Clean    | Validated, cleaned, and aggregated data; nulls and invalid values handled; analysis-ready. | Parquet / Analytical DB (DuckDB) | Daily batch processing + incremental updates from real-time streaming | Medium    |
+| Feature  | Aggregated customer-level features and derived columns for ML models (e.g., total revenue, recency). | Parquet / Feature Store | Daily updates for ML training + incremental updates for real-time serving | Short     |
+
+#### Justification for Each Layer
+
+**Raw Layer:**  
+The raw layer stores the original transactions exactly as they come from the source, without any transformations. It is mainly read by data engineers and ETL pipelines when reprocessing is needed. This layer continuously grows over time because all incoming data is preserved. Time-travel is supported, which allows recomputing features, auditing, and debugging historical data issues. Parquet is chosen for its columnar format, efficient compression, and compatibility with analytics engines.
+
+**Clean Layer:**  
+The clean layer contains data that has been validated, cleaned, and aggregated. Null values, duplicates, and invalid entries are handled to produce an analysis-ready dataset. It is read by BI dashboards, analysts, and ML pipelines. Although smaller than the raw layer due to filtering, it still grows over time. Optional time-travel is useful for recomputing features or conducting historical analyses. Parquet or an analytical DB like DuckDB is chosen to allow efficient batch and ad-hoc queries.
+
+**Feature Layer:**  
+The feature layer contains aggregated and derived features created from the clean data specifically for ML models. It includes customer-level metrics like total revenue, order counts, product diversity, and recency. It is read primarily by ML models and feature-serving pipelines. Since data is aggregated, this layer is smaller than raw or clean layers. Time-travel is supported to ensure reproducibility for model retraining and debugging feature computation. Parquet or a dedicated feature store is used for efficient access during training and real-time predictions.
+
+
+## 3.3 — Design incremental updates
+### Incremental Update Strategy
+
+Our data pipeline handles new and late-arriving data using a combination of high-water mark tracking, reprocessing windows, and append-and-reconcile strategies to ensure both efficiency and accuracy.
+
+**Tracking Processed Data**  
+The system uses a high-water mark approach to track the most recent processed transaction timestamp. Only new records with timestamps greater than the high-water mark are ingested and transformed. This approach minimizes unnecessary reprocessing, reduces computational costs, and ensures that already-processed data is not read again.
+
+**Handling Late-Arriving Records**  
+Late-arriving records are managed using two complementary strategies. First, a **reprocess affected window** approach is implemented: the pipeline maintains sliding time windows and re-evaluates the data within these windows to capture any delayed transactions. Second, an **append and reconcile** strategy ensures that late data is appended to the dataset after a defined waiting period, and all aggregates and derived features are updated accordingly, maintaining correctness without losing information.
+
+**Customer-Level Feature Refresh**  
+Customer-level features are refreshed daily during the batch processing cycle. This ensures that historical features are up-to-date for ML model training while balancing computational efficiency. Real-time features from streaming data are also updated as transactions arrive, allowing the system to maintain near-real-time insights where required.
