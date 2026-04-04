@@ -1,5 +1,5 @@
-# Task 1: Pipeline Architecture Diagram
-## 1.1 — Draw the end-to-end architecture   
+# Step 1: Pipeline Architecture Diagram
+## Draw the end-to-end architecture   
 ```
                          ┌──────────────────────────┐
                          │  Historical Batch Source │
@@ -85,7 +85,7 @@ Monitoring is integrated across all stages to ensure data quality and pipeline h
 
 
 
-## Task 1.2 — Component Descriptions
+## Component Descriptions
 
 **Data Sources**  
 Data enters the pipeline from two primary sources. The historical batch file contains all past transaction records in the Online Retail dataset and is loaded once at the start. The live transaction stream delivers new events one row at a time, simulating real-time orders. Both sources provide raw transactional data that serves as input for the ingestion layer, ensuring that the pipeline can handle both historical and streaming workflows efficiently.
@@ -118,9 +118,9 @@ The pipeline has two primary consumers. The BI dashboard accesses the clean laye
 Monitoring oversees the entire pipeline, ensuring data freshness, completeness, schema consistency, and quality metrics. It receives input from all layers, tracking volume, null rates, outliers, and anomalies, and outputs alerts or dashboards for operational visibility. Technologies can include Prometheus, Grafana, or custom Python scripts. Effective monitoring detects problems early, reduces downtime, and guarantees that data and ML models remain accurate and reliable.
 
 
-# Task 2: Validation and Error Handling Design
+# Step 2: Validation and Error Handling Design
 
-## Task 2.1 — Validation Rules for Online Retail Dataset
+## Validation Rules for Online Retail Dataset
 
 ### Schema Validations (Structural Correctness)
 
@@ -156,7 +156,7 @@ These validations ensure that numeric and datetime fields have sensible, expecte
 
 Business rules enforce logical consistency between fields and capture domain-specific knowledge about sales, cancellations, and customer behavior. These rules are critical for ensuring that analytics and ML models operate on reliable, meaningful data.
 
-## 2.2 — Design the error handling flow
+## Design the error handling flow
 
 ### Schema Validation Failures
 
@@ -199,8 +199,8 @@ Business rules enforce logical consistency between fields and capture domain-spe
 This design ensures that **all invalid or inconsistent records are captured, monitored, and recoverable**, minimizing data loss, improving pipeline reliability, and maintaining trust in downstream analytics and ML outputs.
 
 
-# Task 3: Transformation and Storage Design
-## Task 3.1 — Transformation and Storage Design
+# Step 3: Transformation and Storage Design
+## Transformation and Storage Design
 
 This section defines all transformations applied to validated data in the Online Retail pipeline. Each transformation specifies its input, output, and idempotency considerations.
 
